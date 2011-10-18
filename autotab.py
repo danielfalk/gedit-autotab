@@ -290,6 +290,9 @@ class AutoTab(GObject.Object, Gedit.WindowActivatable):
 
     # no indentations detected
     if sum(indent_count.values()) == 0:
+      if doc.get_mime_type() == "text/x-python" or doc.get_short_name_for_display().endswith(".py"):
+        self.update_tabs(4, True)
+      
       # if we've seen tabs or spaces, default to those
       # can't guess at size, so using default
       if seen_tabs or seen_spaces:
