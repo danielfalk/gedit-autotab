@@ -256,7 +256,10 @@ class AutoTab(GObject.Object, Gedit.WindowActivatable):
     seen_spaces = 0
 
     for line in text.splitlines():
-      if len(line) == 0 or not line[0].isspace():
+      if len(line.strip()) == 0:
+        continue
+      if not line[0].isspace():
+        last_indent = 0
         continue
 
       if line[0] == '\t':
@@ -267,11 +270,9 @@ class AutoTab(GObject.Object, Gedit.WindowActivatable):
       elif line[0] == ' ':
         seen_spaces += 1
 
-      indent = 0
-      for indent in range(0, len(line)):
-        if line[indent] != ' ':
-          break
-
+      #Count leading spaces
+      indent = len(line) - len(line.lstrip(' '))
+      
       # Same indent as last line, count it towards the proper multiple
       # but only if there wasn't a tabbed line inbetween.
       if indent == last_indent:
